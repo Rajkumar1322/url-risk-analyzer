@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>URL Risk Analyzer</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: radial-gradient(circle, #0f2027, #203a43);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+        }
+
+        .box {
+            width: 520px;
+            padding: 30px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            text-align: center;
+            box-shadow: 0 0 40px rgba(0,255,255,0.2);
+        }
+
+        input {
+            width: 90%;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 12px;
+            width: 95%;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(90deg,#00c6ff,#0072ff);
+            color: white;
+            cursor: pointer;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 15px;
+            background: rgba(255,255,255,0.08);
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {opacity:0;}
+            to {opacity:1;}
+        }
+
+        .risk-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 15px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .bar {
+            height: 10px;
+            background: #333;
+            border-radius: 10px;
+        }
+
+        .fill {
+            height: 100%;
+            border-radius: 10px;
+        }
+
+        ul { text-align: left; }
+
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>🔍 URL Risk Analyzer</h2>
+
+<form method="POST">
+    <input type="text" name="url" placeholder="Enter URL..." required>
+    <button>Analyze</button>
+</form>
+
+{% if url is defined %}
+<div class="result">
+
+<p><b>URL:</b> {{ url }}</p>
+<p><b>Status:</b> {{ status }}</p>
+<p><b>Page Title:</b> {{ title }}</p>
+
+<!-- 🔥 CIRCLE -->
+<div class="risk-circle"
+     style="background: conic-gradient(
+     {% if prob <= 35 %}
+        #00ff9f
+     {% elif prob <= 60 %}
+        #ffc107
+     {% elif prob <= 80 %}
+        #ff8c00
+     {% else %}
+        #ff0000
+     {% endif %}
+     {{ prob }}%, #333 {{ prob }}%);">
+     {{ prob }}%
+</div>
+
+<!-- 🔥 BAR -->
+<div class="bar">
+<div class="fill"
+     style="width: {{ prob }}%;
+     background:
+     {% if prob <= 35 %}
+        #00ff9f
+     {% elif prob <= 60 %}
+        #ffc107
+     {% elif prob <= 80 %}
+        #ff8c00
+     {% else %}
+        #ff0000
+     {% endif %};">
+</div>
+</div>
+
+<p><b>Reasons:</b></p>
+<ul>
+{% for r in reasons %}
+<li>{{ r }}</li>
+{% endfor %}
+</ul>
+
+</div>
+{% endif %}
+
+</div>
+
+</body>
+</html>
